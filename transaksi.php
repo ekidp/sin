@@ -23,22 +23,23 @@ $NIS = $_GET["NIS"];
     <form method="post" action="akses/p_bayar.php?NIS=<?= $NIS ?>">
       <div class="form-group">
         <label for="spp">SPP Dan Makan Sehat</label><br/>
+        <?php
+        $q = mysqli_query($conn, "SELECT bulan from tbl_spp_ms where NIS='$NIS' order by bulan desc limit 1");
+        $count = mysqli_num_rows($q);
+        if ($count==0) {
+          $year = date("Y");
+          $date = "$year-01-01";
+        }else {
+          $a = mysqli_fetch_array($q);
+          $date = $a['bulan'];
+        }
+         ?>
         <select class="selectpicker" name="spp[]"  multiple required>
           <?php
-
-          $q = mysqli_query($conn, "SELECT bulan from tbl_spp_ms where NIS='$NIS' order by bulan desc limit 1");
-          $count = mysqli_num_rows($q);
-          if ($count==0) {
-            $year = date("Y");
-            $date = date_create("$year-01-01");
-          }else {
-            $a = mysqli_fetch_array($q);
-            $date = date_create($a["bulan"]);
-          }
           for ($i=0; $i < 12; $i++) {
-            $dateadd = date_add($date,date_interval_create_from_date_string("1 month"));
+            $date = date ("M Y", strtotime("+1 month", strtotime($date)));
             ?>
-            <option value="<?php $dateadd ?> "><?= date_format($dateadd,"M Y"); ?></option>
+            <option value="<?= $date ?> "><?= $date ?></option>
             <?php
           }
           ?>
@@ -46,35 +47,30 @@ $NIS = $_GET["NIS"];
       </div>
       <div class="form-group">
         <label for="anjas">Anjas</label><br/>
-        <select class="selectpicker" name="anjas[]" multiple required>
           <?php
           $q = mysqli_query($conn, "SELECT bulan from tbl_anjas where NIS='$NIS' order by bulan desc limit 1");
           $count = mysqli_num_rows($q);
           if ($count==0) {
             $year = date("Y");
-            $date = date_create("$year-01-01");
+            $date = "$year-01-01";
           }else {
             $a = mysqli_fetch_array($q);
-            $date = date_create($a["bulan"]);
+            $date = $a['bulan'];
           }
-          for ($i=0; $i < 12; $i++) {
-            ?>
-            <option value="<?php date_add($date,date_interval_create_from_date_string("1 month")) ?>"><?= date_format(date_add($date,date_interval_create_from_date_string("1 month")),"M Y"); ?></option>
+           ?>
+          <select class="selectpicker" name="anjas[]"  multiple required>
             <?php
-          }
-          ?>
+            for ($i=0; $i < 12; $i++) {
+              $date = date ("M Y", strtotime("+1 month", strtotime($date)));
+              ?>
+              <option value="<?= $date ?> "><?= $date ?></option>
+              <?php
+            }
+            ?>
         </select>
       </div>
       <div class="form-group">
         <label for="kegiatan">Kegiatan</label><br/>
-        <select class="selectpicker" name="tkkeg">
-          <option disabled selected value> -- select an option -- </option>
-          <?php
-          for ($i=1; $i < 7; $i++) {
-            echo "<option>" . $i . "</option>";
-          }
-          ?>
-        </select>
         <select class="selectpicker" name="thkeg">
           <?php
           $qq = mysqli_query($conn, "SELECT m.tahun from  master_kegiatan m, master_siswa s WHERE m.tahun >= s.thn_ajaran AND s.NIS = $NIS");

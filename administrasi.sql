@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `administrasi` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `administrasi`;
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: administrasi
@@ -232,7 +230,7 @@ CREATE TABLE `tbl_anjas` (
   PRIMARY KEY (`id_anjas`),
   KEY `tbl_anjas` (`id_master_anjas`),
   KEY `tbl_anjas2` (`NIS`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,6 +239,7 @@ CREATE TABLE `tbl_anjas` (
 
 LOCK TABLES `tbl_anjas` WRITE;
 /*!40000 ALTER TABLE `tbl_anjas` DISABLE KEYS */;
+INSERT INTO `tbl_anjas` VALUES (3,1,30071014,'2018-05-28',1,'2018-02-01'),(4,1,30071014,'2018-05-28',1,'2018-03-01'),(5,1,30071014,'2018-05-28',1,'2018-04-01'),(6,1,30071014,'2018-05-28',1,'2018-05-01');
 /*!40000 ALTER TABLE `tbl_anjas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,14 +256,13 @@ CREATE TABLE `tbl_bybuku` (
   `NIS` int(15) DEFAULT NULL,
   `tgl_bayar_buku` datetime(6) NOT NULL,
   `angsuran` varchar(3) NOT NULL,
-  `jatuh_tempo` date NOT NULL,
   `validasi` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_buku`),
   KEY `tbl_bybuku1` (`NIS`),
   KEY `master_bybuku_idx` (`id_master_buku`),
   CONSTRAINT `master_bybuku` FOREIGN KEY (`id_master_buku`) REFERENCES `master_bybuku` (`id_master_buku`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `tbl_bybuku1` FOREIGN KEY (`NIS`) REFERENCES `master_siswa` (`NIS`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -273,6 +271,7 @@ CREATE TABLE `tbl_bybuku` (
 
 LOCK TABLES `tbl_bybuku` WRITE;
 /*!40000 ALTER TABLE `tbl_bybuku` DISABLE KEYS */;
+INSERT INTO `tbl_bybuku` VALUES (1,1,30071014,'2018-05-28 15:22:31.000000','300',1);
 /*!40000 ALTER TABLE `tbl_bybuku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -296,7 +295,7 @@ CREATE TABLE `tbl_kegiatan` (
   KEY `master_keg_idx` (`id_master_keg`),
   CONSTRAINT `master_keg` FOREIGN KEY (`id_master_keg`) REFERENCES `master_kegiatan` (`id_master_keg`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `tbl_kegiatan1` FOREIGN KEY (`NIS`) REFERENCES `master_siswa` (`NIS`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,7 +304,7 @@ CREATE TABLE `tbl_kegiatan` (
 
 LOCK TABLES `tbl_kegiatan` WRITE;
 /*!40000 ALTER TABLE `tbl_kegiatan` DISABLE KEYS */;
-INSERT INTO `tbl_kegiatan` VALUES (1,1,30071014,'2018-05-01',1300000,1,1);
+INSERT INTO `tbl_kegiatan` VALUES (1,1,30071014,'2018-05-01',1300000,1,1),(2,1,30071014,'2018-05-28',300000,1,0);
 /*!40000 ALTER TABLE `tbl_kegiatan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -387,7 +386,7 @@ CREATE TABLE `tbl_spp_ms` (
   CONSTRAINT `fk_master_ms` FOREIGN KEY (`id_master_ms`) REFERENCES `master_ms` (`id_master_ms`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `tbl_spp_ms` FOREIGN KEY (`id_master_spp`) REFERENCES `master_spp` (`id_master_spp`),
   CONSTRAINT `tbl_spp_ms1` FOREIGN KEY (`NIS`) REFERENCES `master_siswa` (`NIS`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -396,7 +395,7 @@ CREATE TABLE `tbl_spp_ms` (
 
 LOCK TABLES `tbl_spp_ms` WRITE;
 /*!40000 ALTER TABLE `tbl_spp_ms` DISABLE KEYS */;
-INSERT INTO `tbl_spp_ms` VALUES (3,1,30071014,'2018-05-01','2018-05-30 00:00:00',1,1);
+INSERT INTO `tbl_spp_ms` VALUES (3,1,30071014,'2018-05-01','2018-05-30 00:00:00',1,1),(10,1,30071014,'2018-06-01','2018-05-28 15:22:31',1,2);
 /*!40000 ALTER TABLE `tbl_spp_ms` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -435,4 +434,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-05-28 10:27:59
+-- Dump completed on 2018-05-28 16:13:07

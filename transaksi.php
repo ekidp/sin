@@ -2,6 +2,7 @@
 include'akses/koneksi.php';
 session_start();
 $NIS = $_GET["NIS"];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +35,7 @@ $NIS = $_GET["NIS"];
           $date = $a['bulan'];
         }
          ?>
-        <select class="selectpicker" name="spp[]"  multiple required>
+        <select class="selectpicker" name="spp[]"  multiple>
           <?php
           for ($i=0; $i < 12; $i++) {
             $date = date ("M Y", strtotime("+1 month", strtotime($date)));
@@ -58,7 +59,7 @@ $NIS = $_GET["NIS"];
             $date = $a['bulan'];
           }
            ?>
-          <select class="selectpicker" name="anjas[]"  multiple required>
+          <select class="selectpicker" name="anjas[]"  multiple>
             <?php
             for ($i=0; $i < 12; $i++) {
               $date = date ("M Y", strtotime("+1 month", strtotime($date)));
@@ -110,7 +111,6 @@ $NIS = $_GET["NIS"];
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>
-
     </form>
   </div>
 

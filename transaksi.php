@@ -1,7 +1,12 @@
 <?php
 include'akses/koneksi.php';
 session_start();
-$NIS = $_GET["NIS"];
+
+if (empty($_GET["NIS"])) {
+  echo "<script type='text/javascript'>location.href = 'siswa.php';</script>";
+}else {
+  $NIS = $_GET["NIS"];
+}
 
 ?>
 <!DOCTYPE html>
@@ -87,7 +92,6 @@ $NIS = $_GET["NIS"];
       <div class="form-group">
         <label for="buku">Buku</label><br/>
         <select class="selectpicker" name="tkbuku">
-          <option disabled selected value> -- select an option -- </option>
           <?php
           for ($i=1; $i < 7; $i++) {
             echo "<option>" . $i . "</option>";

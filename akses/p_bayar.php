@@ -69,11 +69,32 @@ if (!empty($_POST['kegiatan'])) {
   $thkeg = $_POST['thkeg'];
   $keg = $_POST['kegiatan'];
 
-  $q = mysqli_query($conn, "SELECT id_master_keg FROM master_kegiatan WHERE Tahun=$thkeg");
+  $q = mysqli_query($conn, "SELECT * FROM master_kegiatan WHERE Tahun=$thkeg");
   $a = mysqli_fetch_array($q);
   $idkeg = $a['id_master_keg'];
+  $by = $a['by_keg'];
 
-  $q = mysqli_query($conn, "INSERT INTO `tbl_kegiatan` (`id_master_keg`, `NIS`, `tgl_bayar_keg`, `angsuran`, `validasi`, `lunas`) VALUES ('$idkeg', '$nis', NOW(), '$keg', '1', '0');");
+  $q = mysqli_query($conn, "SELECT * FROM tbl_kegiatan WHERE id_master_keg=$idkeg AND NIS=$nis order by id_keg desc limit 1");
+  $a = mysqli_fetch_array($q);
+
+  $ke = $a['angsuranke'];
+  $telah = $a['telahbayar'];
+  $sisa = $a['sisa'];
+
+  if (is_null($sisa)) {
+    $sisa = $by;
+  }
+
+  $hke = $ke + 1;
+  $htelah = $telah + $keg;
+  $hsisa = $sisa - $keg;
+
+  if ($hsisa == 0) {
+    $lunas = 1;
+  }else {
+    $lunas = 0;
+  }
+   $q = mysqli_query($conn, "INSERT INTO `tbl_kegiatan` (`id_master_keg`, `NIS`, `tgl_bayar_keg`, `angsuran`, angsuranke, telahbayar, sisa, `validasi`, `lunas`) VALUES ('$idkeg', '$nis', NOW(), '$keg', $hke, $htelah, $hsisa, '1', $lunas);");
 
 }
 

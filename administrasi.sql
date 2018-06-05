@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: administrasi
 -- ------------------------------------------------------
--- Server version	5.5.5-10.1.28-MariaDB
+-- Server version	5.6.21
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -56,7 +56,7 @@ CREATE TABLE `master_bybuku` (
   `tingkat` int(11) NOT NULL,
   `harga_buku` int(11) NOT NULL,
   PRIMARY KEY (`id_master_buku`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `master_bybuku` (
 
 LOCK TABLES `master_bybuku` WRITE;
 /*!40000 ALTER TABLE `master_bybuku` DISABLE KEYS */;
-INSERT INTO `master_bybuku` VALUES (1,2017,1,450000),(2,2017,2,460000);
+INSERT INTO `master_bybuku` VALUES (1,2017,1,450000),(2,2017,2,460000),(3,2018,4,470000);
 /*!40000 ALTER TABLE `master_bybuku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,6 +257,10 @@ CREATE TABLE `tbl_bybuku` (
   `tgl_bayar_buku` datetime(6) NOT NULL,
   `angsuran` varchar(3) NOT NULL,
   `validasi` tinyint(1) NOT NULL,
+  `ansuranke` tinyint(1) DEFAULT NULL,
+  `telahbayar` int(11) DEFAULT NULL,
+  `sisa` int(11) DEFAULT NULL,
+  `lunas` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_buku`),
   KEY `tbl_bybuku1` (`NIS`),
   KEY `master_bybuku_idx` (`id_master_buku`),
@@ -271,7 +275,7 @@ CREATE TABLE `tbl_bybuku` (
 
 LOCK TABLES `tbl_bybuku` WRITE;
 /*!40000 ALTER TABLE `tbl_bybuku` DISABLE KEYS */;
-INSERT INTO `tbl_bybuku` VALUES (1,1,30071014,'2018-05-28 15:22:31.000000','300',1);
+INSERT INTO `tbl_bybuku` VALUES (1,1,30071014,'2018-05-28 15:22:31.000000','300',1,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `tbl_bybuku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -298,7 +302,7 @@ CREATE TABLE `tbl_kegiatan` (
   KEY `master_keg_idx` (`id_master_keg`),
   CONSTRAINT `master_keg` FOREIGN KEY (`id_master_keg`) REFERENCES `master_kegiatan` (`id_master_keg`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `tbl_kegiatan1` FOREIGN KEY (`NIS`) REFERENCES `master_siswa` (`NIS`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -307,7 +311,7 @@ CREATE TABLE `tbl_kegiatan` (
 
 LOCK TABLES `tbl_kegiatan` WRITE;
 /*!40000 ALTER TABLE `tbl_kegiatan` DISABLE KEYS */;
-INSERT INTO `tbl_kegiatan` VALUES (12,1,30071014,'2018-06-04',100000,1,100000,1200000,1,0),(13,1,30071014,'2018-06-04',500000,2,600000,700000,1,0);
+INSERT INTO `tbl_kegiatan` VALUES (12,1,30071014,'2018-06-04',100000,1,100000,1200000,1,0),(13,1,30071014,'2018-06-04',500000,2,600000,700000,1,0),(15,1,30071014,'2018-06-05',700000,3,1300000,0,1,1);
 /*!40000 ALTER TABLE `tbl_kegiatan` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -437,4 +441,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-04 15:03:13
+-- Dump completed on 2018-06-05 14:59:07

@@ -89,12 +89,12 @@ if (empty($_GET["NIS"])) {
         </select>
         <input type="number" class="form-control" placeholder="Masukan Nominal" name="kegiatan">
 
-
             <?php
               foreach ($idmasterkeg as $key => $value) {
                 $q = mysqli_query($conn, "SELECT * FROM master_kegiatan WHERE id_master_keg = $value");
                 $a = mysqli_fetch_array($q);
                 $tahun = $a['Tahun'];
+                $bykeg = $a['by_keg'];
                 $q = mysqli_query($conn, "select m.Tahun, k.sisa, k.lunas from tbl_kegiatan k, master_kegiatan m where k.NIS=$NIS AND m.id_master_keg = $value AND k.id_master_keg = m.id_master_keg order by sisa asc limit 1");
                 $a = mysqli_fetch_array($q);
 
@@ -102,13 +102,15 @@ if (empty($_GET["NIS"])) {
                   $lunas = "Lunas";
                 }else {
                   $lunas = "Belum Lunas";
-                }
+                };
+                if (is_null($a['sisa'])) {
+                  $a['sisa'] = $bykeg;
+                };
 
                 echo $tahun . " : Sisa : " . $a['sisa'] . " Status : " . $lunas . "<br>";
               }
 
               ?>
-
 
       </div>
       <div class="form-group">
@@ -133,7 +135,37 @@ if (empty($_GET["NIS"])) {
         </select>
 
         <input type="number" class="form-control" placeholder="Masukan Nominal" name="buku" >
-        <input type="number" class="form-control" name="sisabuku" disabled>
+        <?php
+        $qq = mysqli_query($conn, "SELECT m.id_master_buku, m.tahun, k.tingkat from  master_bybuku m, master_siswa s, tbl_kelas_siswa k WHERE m.tahun >= s.thn_ajaran AND k.kelas = s.kelas AND s.NIS = $NIS");
+
+        while ($aa = mysqli_fetch_array($qq)) {
+          $idmasterbuku[] = $aa["id_master_buku"];
+          $tk = $aa['tingkat'];
+       }
+
+          foreach ($idmasterbuku as $key => $value) {
+            $q = mysqli_query($conn, "SELECT * FROM master_bybuku WHERE id_master_buku = $value");
+            $a = mysqli_fetch_array($q);
+            $tahun = $a['tahun'];
+            $tingkat = $a['tingkat'];
+            $bybuku = $a['harga_buku'];
+            $q = mysqli_query($conn, "SELECT m.tahun, k.sisa, k.lunas from tbl_bybuku k, master_bybuku m where m.tingkat = $tk AND k.NIS=$NIS AND m.id_master_buku = $value AND k.id_master_buku = m.id_master_buku order by sisa asc limit 1") or die (mysqli_error($conn));
+            $a = mysqli_fetch_array($q);
+
+            if ($a['lunas'] == 1) {
+              $lunas = "Lunas";
+            }else {
+              $lunas = "Belum Lunas";
+            };
+            if (is_null($a['sisa'])) {
+              $a['sisa'] = $bybuku;
+            };
+
+            echo $tahun . " : Tingkat : " . $tingkat . " : Sisa : " . $a['sisa'] . " Status : " . $lunas . "<br>";
+          }
+
+          ?>
+
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>

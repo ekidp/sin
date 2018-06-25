@@ -99,15 +99,15 @@ if (!empty($_POST['kegiatan'])) {
 }
 
 if (!empty($_POST['buku'])) {
-  $tkbuku = $_POST['tkbuku'];
+  $q = mysqli_query($conn, "SELECT m.id_master_buku, m.tahun, m.tingkat, m.harga_buku FROM master_bybuku m, master_siswa s, tbl_kelas_siswa k WHERE s.kelas = k.kelas AND m.tingkat = k.tingkat AND s.NIS = $nis") or die (mysqli_error($conn));
+  $b = mysqli_fetch_array($q);
+
+  $tkbuku = $b['tingkat'];
   $thbuku = $_POST['thbuku'];
   $book = $_POST['buku'];
+  $idbuku = $b['id_master_buku'];
 
-  $q = mysqli_query($conn, "SELECT id_master_buku FROM master_bybuku WHERE tahun=$thbuku AND tingkat=$tkbuku");
-  $a = mysqli_fetch_array($q);
-  $idbuku = $a['id_master_buku'];
-
-  $q = mysqli_query($conn, "INSERT INTO `tbl_bybuku` (`id_master_buku`, `NIS`, `tgl_bayar_buku`, `angsuran`, `validasi`) VALUES ('$idbuku', '$nis', NOW(), '$book', '1');");
+  $q = mysqli_query($conn, "INSERT INTO `tbl_bybuku` (`id_master_buku`, `NIS`, `tgl_bayar_buku`, `angsuran`, `validasi`, `ansuranke`, `telahbayar`, `sisa`, `lunas`) VALUES ($idbuku, $nis, NOW(), $book, '1', '1', '2', '2', '2');");
 
 }
 

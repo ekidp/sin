@@ -107,8 +107,33 @@ if (!empty($_POST['buku'])) {
   $book = $_POST['buku'];
   $idbuku = $b['id_master_buku'];
 
-  $q = mysqli_query($conn, "INSERT INTO `tbl_bybuku` (`id_master_buku`, `NIS`, `tgl_bayar_buku`, `angsuran`, `validasi`, `ansuranke`, `telahbayar`, `sisa`, `lunas`) VALUES ($idbuku, $nis, NOW(), $book, '1', '1', '2', '2', '2');");
+  $q = mysqli_query($conn, "SELECT * FROM tbl_bybuku WHERE id_master_buku=$idbuku AND NIS=$nis order by id_buku desc limit 1");
+  $a = mysqli_fetch_array($q);
 
+  $ke = $a['angsuranke'];
+  $telah = $a['telahbayar'];
+  $sisa = $a['sisa'];
+
+  if (is_null($sisa)) {
+    $sisa = $b['harga_buku'];
+  }
+
+  $hke = $ke + 1;
+  $htelah = $telah + $book;
+  $hsisa = $sisa - $book;
+
+  if ($hsisa == 0) {
+    $lunas = 1;
+  }else {
+    $lunas = 0;
+  }
+
+  $q = mysqli_query($conn, "INSERT INTO `tbl_bybuku` (`id_master_buku`, `NIS`, `tgl_bayar_buku`, `angsuran`, `validasi`, `angsuranke`, `telahbayar`, `sisa`, `lunas`) VALUES ($idbuku, $nis, NOW(), $book, '1', $hke, $htelah, $hsisa, $lunas);");
+
+}
+
+if (!empty($_POST['ppdb'])) {
+  
 }
 
 $total = $tbspp + $bms + $tbanjas + $keg + $book ;

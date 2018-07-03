@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
+CREATE DATABASE  IF NOT EXISTS `administrasi` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `administrasi`;
+-- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: administrasi
 -- ------------------------------------------------------
--- Server version	5.6.21
+-- Server version	5.5.5-10.1.28-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -56,7 +58,7 @@ CREATE TABLE `master_bybuku` (
   `tingkat` int(11) NOT NULL,
   `harga_buku` int(11) NOT NULL,
   PRIMARY KEY (`id_master_buku`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +67,7 @@ CREATE TABLE `master_bybuku` (
 
 LOCK TABLES `master_bybuku` WRITE;
 /*!40000 ALTER TABLE `master_bybuku` DISABLE KEYS */;
-INSERT INTO `master_bybuku` VALUES (1,2017,1,450000),(2,2017,2,460000),(3,2018,4,470000);
+INSERT INTO `master_bybuku` VALUES (1,2017,1,450000),(2,2017,2,460000),(3,2018,4,470000),(4,2019,5,480000);
 /*!40000 ALTER TABLE `master_bybuku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,6 +145,7 @@ CREATE TABLE `master_ppdb` (
 
 LOCK TABLES `master_ppdb` WRITE;
 /*!40000 ALTER TABLE `master_ppdb` DISABLE KEYS */;
+INSERT INTO `master_ppdb` VALUES (0,30071014,4000000);
 /*!40000 ALTER TABLE `master_ppdb` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,9 +258,9 @@ CREATE TABLE `tbl_bybuku` (
   `id_master_buku` int(11) DEFAULT NULL,
   `NIS` int(15) DEFAULT NULL,
   `tgl_bayar_buku` datetime(6) NOT NULL,
-  `angsuran` varchar(3) NOT NULL,
+  `angsuran` int(11) NOT NULL,
   `validasi` tinyint(1) NOT NULL,
-  `ansuranke` tinyint(1) DEFAULT NULL,
+  `angsuranke` tinyint(1) DEFAULT NULL,
   `telahbayar` int(11) DEFAULT NULL,
   `sisa` int(11) DEFAULT NULL,
   `lunas` tinyint(1) DEFAULT NULL,
@@ -266,7 +269,7 @@ CREATE TABLE `tbl_bybuku` (
   KEY `master_bybuku_idx` (`id_master_buku`),
   CONSTRAINT `master_bybuku` FOREIGN KEY (`id_master_buku`) REFERENCES `master_bybuku` (`id_master_buku`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `tbl_bybuku1` FOREIGN KEY (`NIS`) REFERENCES `master_siswa` (`NIS`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,7 +278,7 @@ CREATE TABLE `tbl_bybuku` (
 
 LOCK TABLES `tbl_bybuku` WRITE;
 /*!40000 ALTER TABLE `tbl_bybuku` DISABLE KEYS */;
-INSERT INTO `tbl_bybuku` VALUES (1,1,30071014,'2018-05-28 15:22:31.000000','300',1,NULL,NULL,NULL,NULL);
+INSERT INTO `tbl_bybuku` VALUES (7,3,30071014,'2018-06-28 15:00:08.000000',100000,1,1,100000,370000,0),(8,3,30071014,'2018-06-28 15:00:43.000000',200000,1,2,300000,170000,0),(9,3,30071014,'2018-06-28 15:04:07.000000',170000,1,3,470000,0,1);
 /*!40000 ALTER TABLE `tbl_bybuku` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -348,16 +351,16 @@ DROP TABLE IF EXISTS `tbl_ppdb`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_ppdb` (
   `id_ppdb` int(11) NOT NULL AUTO_INCREMENT,
-  `NIS` int(11) NOT NULL,
   `id_master_ppdb` int(11) NOT NULL,
   `angsuran` int(11) NOT NULL,
   `tgl_angsuran` datetime NOT NULL,
-  `by_angsur` int(11) NOT NULL,
   `validasi` tinyint(1) NOT NULL,
+  `angsuranke` int(11) DEFAULT NULL,
+  `telahbayar` int(11) DEFAULT NULL,
+  `sisa` int(11) DEFAULT NULL,
+  `lunas` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id_ppdb`),
   KEY `tbl_ppdb1` (`id_master_ppdb`),
-  KEY `tbl_ppdb0` (`NIS`),
-  CONSTRAINT `tbl_ppdb0` FOREIGN KEY (`NIS`) REFERENCES `master_siswa` (`NIS`),
   CONSTRAINT `tbl_ppdb1` FOREIGN KEY (`id_master_ppdb`) REFERENCES `master_ppdb` (`id_master_ppdb`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -441,4 +444,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-05 14:59:07
+-- Dump completed on 2018-07-04  4:19:02

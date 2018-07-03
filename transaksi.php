@@ -95,7 +95,7 @@ if (empty($_GET["NIS"])) {
           $a = mysqli_fetch_array($q);
           $tahun = $a['Tahun'];
           $bykeg = $a['by_keg'];
-          $q = mysqli_query($conn, "select m.Tahun, k.sisa, k.lunas from tbl_kegiatan k, master_kegiatan m where k.NIS=$NIS AND m.id_master_keg = $value AND k.id_master_keg = m.id_master_keg order by sisa asc limit 1");
+          $q = mysqli_query($conn, "select m.Tahun, k.sisa, k.lunas, k.angsuranke from tbl_kegiatan k, master_kegiatan m where k.NIS=$NIS AND m.id_master_keg = $value AND k.id_master_keg = m.id_master_keg order by sisa asc limit 1");
           $a = mysqli_fetch_array($q);
 
           if ($a['lunas'] == 1) {
@@ -105,9 +105,10 @@ if (empty($_GET["NIS"])) {
           };
           if (is_null($a['sisa'])) {
             $a['sisa'] = $bykeg;
+            $a['angsuranke'] = 0;
           };
 
-          echo $tahun . " : Sisa : " . $a['sisa'] . " Status : " . $lunas . "<br>";
+          echo $tahun . " : Sisa : " . $a['sisa'] . " | Status : " . $lunas . " | Angsuran Ke : " . $a['angsuranke'] ."<br>";
         }
 
         ?>
@@ -115,13 +116,7 @@ if (empty($_GET["NIS"])) {
       </div>
       <div class="form-group">
         <label for="buku">Buku</label><br/>
-        <select class="selectpicker" name="tkbuku">
-          <?php
-          for ($i=1; $i < 7; $i++) {
-            echo "<option>" . $i . "</option>";
-          }
-          ?>
-        </select>
+
         <select class="selectpicker" name="thbuku">
           <?php
           $qq = mysqli_query($conn, "SELECT thn_ajaran from master_siswa WHERE NIS = $NIS") or die (mysqli_error($conn));
@@ -140,7 +135,7 @@ if (empty($_GET["NIS"])) {
         $q = mysqli_query($conn, "SELECT m.tahun, m.tingkat, m.harga_buku FROM master_bybuku m, master_siswa s, tbl_kelas_siswa k WHERE s.kelas = k.kelas AND m.tingkat = k.tingkat AND s.NIS = $NIS") or die (mysqli_error($conn));
         $b = mysqli_fetch_array($q);
 
-        $q = mysqli_query($conn, "SELECT m.harga_buku, m.tingkat, m.tahun, b.sisa, b.lunas FROM master_bybuku m, tbl_bybuku b, master_siswa s, tbl_kelas_siswa k WHERE s.kelas = k.kelas AND k.tingkat = m.tingkat AND m.id_master_buku = b.id_master_buku AND b.NIS = s.NIS AND s.NIS = $NIS ORDER BY b.tgl_bayar_buku DESC LIMIT 1") or die (mysqli_error($conn));
+        $q = mysqli_query($conn, "SELECT m.harga_buku, m.tingkat, m.tahun, b.sisa, b.lunas, b.angsuranke FROM master_bybuku m, tbl_bybuku b, master_siswa s, tbl_kelas_siswa k WHERE s.kelas = k.kelas AND k.tingkat = m.tingkat AND m.id_master_buku = b.id_master_buku AND b.NIS = s.NIS AND s.NIS = $NIS ORDER BY b.tgl_bayar_buku DESC LIMIT 1") or die (mysqli_error($conn));
         $a = mysqli_fetch_array($q);
 
         if ($a['lunas'] == 1) {
@@ -153,10 +148,42 @@ if (empty($_GET["NIS"])) {
           $a['sisa'] = $b['harga_buku'];
           $a['tahun'] = $b['tahun'];
           $a['tingkat'] = $b['tingkat'];
-
+          $a['angsuranke'] = 0;
         };
 
-        echo $a['tahun'] . " : Tingkat : " . $a['tingkat'] . " : Sisa : " . $a['sisa'] . " Status : " . $lunas . "<br>";
+        echo $a['tahun'] . " : Tingkat : " . $a['tingkat'] . " | Sisa : " . $a['sisa'] . " | Status : " . $lunas . " | Angsuran Ke : " . $a['angsuranke'] . "<br>";
+
+
+        ?>
+
+      </div>
+      <div class="form-group">
+        <label for="ppdb">PPDB</label><br/>
+
+        <input type="number" class="form-control" placeholder="Masukan Nominal" name="ppdb">
+
+        <?php
+        $q = mysqli_query($conn, "SELECT * FROM master_ppdb WHERE NIS=$NIS") or die (mysqli_error($conn));
+        $b = mysqli_fetch_array($q);
+
+        $idppdb = $b['id_master_ppdb'];
+
+        $q = mysqli_query($conn, "SELECT m.by_ppdb, m.id_master_ppdb, b.sisa, b.lunas, b.angsuranke FROM master_ppdb m, tbl_ppdb b WHERE m.id_master_ppdb = b.id_master_ppdb AND b.id_master_ppdb = $idppdb") or die (mysqli_error($conn));
+        $a = mysqli_fetch_array($q);
+
+        if ($a['lunas'] == 1) {
+          $lunas = "Lunas";
+        }else {
+          $lunas = "Belum Lunas";
+        };
+
+        if (is_null($a['sisa'])) {
+          $a['sisa'] = $b['by_ppdb'];
+          $a['angsuranke'] = 0;
+        };
+
+        echo "Sisa : " . $a['sisa'] . " | Status : " . $lunas . " | Angsuran Ke : " . $a['angsuranke'] . "<br>";
+
 
 
         ?>

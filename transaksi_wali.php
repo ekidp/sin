@@ -1,12 +1,8 @@
 <?php
-include'akses/koneksi.php';
+include 'akses/koneksi.php';
 session_start();
-
-if (empty($_GET["NIS"])) {
-  echo "<script type='text/javascript'>location.href = 'siswa.php';</script>";
-}else {
-  $NIS = $_GET["NIS"];
-}
+$_SESSION["NIS"] = '30071014';
+$NIS = $_SESSION["NIS"];
 
 ?>
 <!DOCTYPE html>
@@ -26,11 +22,11 @@ if (empty($_GET["NIS"])) {
 <body>
 
   <div class="container">
-    <form method="post" action="akses/p_bayar.php?NIS=<?= $NIS ?>">
+    <form method="post" action="akses/p_bayar_wali.php?NIS=<?= $NIS ?>">
       <div class="form-group">
         <label for="spp">SPP Dan Makan Sehat</label><br/>
         <?php
-        $q = mysqli_query($conn, "SELECT bulan from tbl_spp_ms where NIS='$NIS' order by bulan desc limit 1");
+        $q = mysqli_query($conn, "SELECT bulan from tbl_spp_ms where NIS='$NIS' order by bulan desc limit 1") or die (mysqli_error($conn));
         $count = mysqli_num_rows($q);
         if ($count==0) {
           $year = date("Y");
@@ -186,6 +182,13 @@ if (empty($_GET["NIS"])) {
 
         ?>
 
+      </div>
+      <div class="form-group">
+        <h3>Bukti Transfer</h3>
+        <label for="norek">Nomor Rekening :</label>
+        <input type="number" name="norek" value="" class="form-control" required>
+        <label for="noref">Nomor Ref :</label>
+        <input type="number" name="noref" value="" class="form-control" required>
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>

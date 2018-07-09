@@ -10,6 +10,15 @@ $keg = 0;
 $book = 0;
 $ppdb = 0;
 
+$norek = $_POST['norek'];
+$noref = $_POST['noref'];
+
+$q = mysqli_query($conn, "INSERT INTO transfer (norek, noref) VALUES ('$norek', '$noref')") or die (mysqli_error($conn));
+$q = mysqli_query($conn, "SELECT idtransfer FROM transfer WHERE norek='$norek' AND noref='$noref'");
+$a = mysqli_fetch_array($q);
+
+$idtransfer = $a['idtransfer'];
+
 if (!empty($_POST['spp'])) {
 
   $spp = $_POST['spp'];
@@ -39,7 +48,7 @@ if (!empty($_POST['spp'])) {
     $q = mysqli_query($conn, "SELECT id_master_ms FROM master_ms WHERE bulan='$value'") or die (mysqli_error($conn));
     $a = mysqli_fetch_array($q);
     $idms = $a['id_master_ms'];
-    $q = mysqli_query($conn, "INSERT INTO `tbl_spp_ms` (`id_master_spp`, `NIS`, `bulan`, `tgl_bayar_spp`, `validasi`, `id_master_ms`) VALUES ('$idspp', '$nis', '$value', NOW(), '1', '$idms');");
+    $q = mysqli_query($conn, "INSERT INTO `tbl_spp_ms` (`id_master_spp`, `NIS`, `bulan`, `tgl_bayar_spp`, `validasi`, `id_master_ms`, idtransfer) VALUES ('$idspp', '$nis', '$value', NOW(), '0', '$idms', '$idtransfer');");
   }
 }
 
@@ -62,7 +71,7 @@ if (!empty($_POST['anjas'])) {
   foreach ($anjas as $key => $value) {
     $tbanjas += $banjas;
     $bulan = date("Y-m-d", strtotime($value));
-    echo "$bulan";
+
     $q = mysqli_query($conn, "SELECT idpotanjas FROM master_potanjas WHERE bulan='$value'");
     $a = mysqli_fetch_array($q);
     $idpot = $a['idpotanjas'];
@@ -90,7 +99,7 @@ if (!empty($_POST['anjas'])) {
   foreach ($anjas as $key => $value) {
     $bulan = date("Y-m-d", strtotime($value));
 
-    $q = mysqli_query($conn, "INSERT INTO `tbl_anjas` (`id_master_anjas`, `tgl_bayar_anjas`, `validasi`, `bulan`) VALUES ('$idanjas', NOW(), '1', '$bulan');");
+    $q = mysqli_query($conn, "INSERT INTO `tbl_anjas` (`id_master_anjas`, `tgl_bayar_anjas`, `validasi`, `bulan`, idtransfer) VALUES ('$idanjas', NOW(), '0', '$bulan', $idtransfer);");
   }
 
 }
@@ -124,7 +133,7 @@ if (!empty($_POST['kegiatan'])) {
   }else {
     $lunas = 0;
   }
-   $q = mysqli_query($conn, "INSERT INTO `tbl_kegiatan` (`id_master_keg`, `NIS`, `tgl_bayar_keg`, `angsuran`, angsuranke, telahbayar, sisa, `validasi`, `lunas`) VALUES ('$idkeg', '$nis', NOW(), '$keg', $hke, $htelah, $hsisa, '1', $lunas);");
+   $q = mysqli_query($conn, "INSERT INTO `tbl_kegiatan` (`id_master_keg`, `NIS`, `tgl_bayar_keg`, `angsuran`, angsuranke, telahbayar, sisa, `validasi`, `lunas`, idtransfer) VALUES ('$idkeg', '$nis', NOW(), '$keg', $hke, $htelah, $hsisa, '0', $lunas, $idtransfer);");
 
 }
 
@@ -158,7 +167,7 @@ if (!empty($_POST['buku'])) {
     $lunas = 0;
   }
 
-  $q = mysqli_query($conn, "INSERT INTO `tbl_bybuku` (`id_master_buku`, `NIS`, `tgl_bayar_buku`, `angsuran`, `validasi`, `angsuranke`, `telahbayar`, `sisa`, `lunas`) VALUES ($idbuku, $nis, NOW(), $book, '1', $hke, $htelah, $hsisa, $lunas);");
+  $q = mysqli_query($conn, "INSERT INTO `tbl_bybuku` (`id_master_buku`, `NIS`, `tgl_bayar_buku`, `angsuran`, `validasi`, `angsuranke`, `telahbayar`, `sisa`, `lunas`, idtransfer) VALUES ($idbuku, $nis, NOW(), $book, '0', $hke, $htelah, $hsisa, $lunas, $idtransfer);");
 
 }
 
@@ -191,11 +200,13 @@ if (!empty($_POST['ppdb'])) {
   }else {
     $lunas = 0;
   }
-   $q = mysqli_query($conn, "INSERT INTO `tbl_ppdb` (`id_master_ppdb`, `tgl_angsuran`, `angsuran`, angsuranke, telahbayar, sisa, `validasi`, `lunas`) VALUES ('$idppdb', NOW(), '$ppdb', $hke, $htelah, $hsisa, '1', $lunas);")or die(mysqli_error($conn));
+   $q = mysqli_query($conn, "INSERT INTO `tbl_ppdb` (`id_master_ppdb`, `tgl_angsuran`, `angsuran`, angsuranke, telahbayar, sisa, `validasi`, `lunas`, idtransfer) VALUES ('$idppdb', NOW(), '$ppdb', $hke, $htelah, $hsisa, '0', $lunas, $idtransfer);")or die(mysqli_error($conn));
 
 }
 
 $total = $tbspp + $bms + $tbanjas + $keg + $book + $ppdb;
+
+$q = mysqli_query($conn, "UPDATE `transfer` SET `total`='$total' WHERE `idtransfer`='$idtransfer'")
 
 $rp = "Rp " . number_format($total,2,',','.');
 
